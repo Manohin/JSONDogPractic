@@ -35,15 +35,13 @@ class ViewController: UIViewController {
                 return
             }
             print(response)
+            
             let decoder = JSONDecoder()
             do {
                 let dog = try decoder.decode(Dog.self, from: data)
                 guard let dataImage = URL(string: dog.message) else { return }
                 URLSession.shared.dataTask(with: dataImage) { [weak self] data, _, error in
-                    guard let data = data else {
-                        print(error?.localizedDescription ?? "usdfghsdifghds")
-                        return
-                    }
+                    guard let data = try? Data(contentsOf: dataImage) else { return }
                     
                     DispatchQueue.main.async {
                         guard let image = UIImage(data: data) else { return }
