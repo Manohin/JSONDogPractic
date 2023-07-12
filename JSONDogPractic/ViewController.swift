@@ -46,12 +46,12 @@ final class ViewController: UIViewController {
             let decoder = JSONDecoder()
             do {
                 let dog = try decoder.decode(Dog.self, from: data)
-                guard let dataImage = URL(string: dog.message) else { return }
-                URLSession.shared.dataTask(with: dataImage) { [unowned self] data, _, error in
-                    guard let data = try? Data(contentsOf: dataImage) else { return }
+                guard let imageURL = URL(string: dog.message) else { return }
+                URLSession.shared.dataTask(with: imageURL) { [unowned self] data, _, error in
+                    guard let imageData = try? Data(contentsOf: imageURL) else { return }
                     
                     DispatchQueue.main.async {
-                        self.image = UIImage(data: data)
+                        self.image = UIImage(data: imageData)
                         self.activityIndicator.stopAnimating()
                     }
                 }.resume()
