@@ -17,6 +17,7 @@ final class ViewController: UIViewController {
             return UIImage()
         }
         set {
+            activityIndicator.stopAnimating()
             dogView.image = newValue
             dogView.sizeToFit()
         }
@@ -26,7 +27,7 @@ final class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        activityIndicator.isHidden = true
+        activityIndicator.hidesWhenStopped = true
     }
     
     @IBAction func showDogButton(_ sender: UIButton) {
@@ -52,7 +53,6 @@ final class ViewController: UIViewController {
                     
                     DispatchQueue.main.async {
                         self.image = UIImage(data: imageData)
-                        self.activityIndicator.stopAnimating()
                     }
                 }.resume()
             } catch let error {
