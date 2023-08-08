@@ -10,10 +10,39 @@ import UIKit
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
+    var window: UIWindow?
+        var loadingView: UIView?
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+        
+              // Создание окна приложения
+              window = UIWindow(frame: UIScreen.main.bounds)
+              
+              // Создание корневого контроллера (может быть вашим ViewController)
+              let rootViewController = UIViewController()
+              
+              // Создание и настройка вью для анимации загрузки
+              loadingView = UIView(frame: window!.bounds)
+              loadingView!.backgroundColor = UIColor(white: 0.1, alpha: 0.5) // Полупрозрачный фон
+              let activityIndicator = UIActivityIndicatorView(style: .large)
+              activityIndicator.center = loadingView!.center
+              loadingView!.addSubview(activityIndicator)
+              activityIndicator.startAnimating()
+              
+              // Добавление вью для анимации загрузки на корневой контроллер
+              rootViewController.view.addSubview(loadingView!)
+              
+              // Задержка для симуляции длительной загрузки (можете убрать это в реальном приложении)
+              DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+                  // По окончании анимации или загрузки, установите корневой контроллер для окна
+                  self.window?.rootViewController = rootViewController
+                  self.window?.makeKeyAndVisible()
+                  
+                  // Уберите вью анимации загрузки
+                  self.loadingView?.removeFromSuperview()
+                  self.loadingView = nil
+              }
         return true
     }
 
