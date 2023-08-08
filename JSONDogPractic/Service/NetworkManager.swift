@@ -18,21 +18,28 @@ final class NetworkManager {
     
     private init() {}
     
-    func fetchData(from url: URL, completion: @escaping(Result <Data, NetworkError>) -> Void) {
+    func fetchData(from url: String, completion: @escaping(Result <Data, NetworkError>) -> Void) {
         DispatchQueue.global().async {
+            guard let url = URL(string: url) else {
+                completion(.failure(.invalidURL))
+                return
+            }
             guard let dogData = try? Data(contentsOf: url) else {
                 completion(.failure(.decodingError))
                 return
             }
-
-      let decoder = JSONDecoder()
+            
+            let decoder = JSONDecoder()
             guard let dog = try? decoder.decode(Dog.self, from: dogData) else {
                 completion(.failure(.decodingError))
                 return
             }
-            guard let url = URL(string: dog.message) else { return }
+            guard let url = URL(string: dog.message) else {
+                completion(.failure(.invalidURL))
+                return
+            }
             guard let imageData = try? Data(contentsOf: url) else {
-                completion(.failure(.decodingError))
+                completion(.failure(.noData))
                 return
             }
             completion(.success(imageData))

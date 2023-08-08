@@ -12,7 +12,7 @@ final class MainViewController: UIViewController {
     @IBOutlet weak var dogView: UIImageView!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
-    let url = URL(string: "https://dog.ceo/api/breeds/image/random")!
+    let url = "https://dog.ceo/api/breeds/image/random"
     
     private let networkManager = NetworkManager.shared
     
@@ -28,10 +28,10 @@ final class MainViewController: UIViewController {
     
     func fetchDog() {
         activityIndicator.startAnimating()
+        dogView.image = nil
         
         networkManager.fetchData(from: url) { [weak self] result in
             switch result {
-                
             case .success(let data):
                 let image = UIImage(data: data)
                 DispatchQueue.main.async { [weak self] in
