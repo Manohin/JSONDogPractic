@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  MainViewController.swift
 //  JSONDogPractic
 //
 //  Created by Alexey Manokhin on 14.06.2023.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class ViewController: UIViewController {
+final class MainViewController: UIViewController {
     
     @IBOutlet weak var dogView: UIImageView!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
