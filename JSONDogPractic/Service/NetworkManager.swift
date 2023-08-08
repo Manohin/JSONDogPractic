@@ -31,7 +31,10 @@ final class NetworkManager {
                 return
             }
             guard let url = URL(string: dog.message) else { return }
-            guard let imageData = try? Data(contentsOf: url) else { return }
+            guard let imageData = try? Data(contentsOf: url) else {
+                completion(.failure(.decodingError))
+                return
+            }
             completion(.success(imageData))
         }
     }
