@@ -18,7 +18,7 @@ final class NetworkManager {
     
     private init() {}
     
-    func fetchData(from url: String, completion: @escaping(Result <Data, NetworkError>) -> Void) {
+    func fetch<T: Decodable>(_ type: T.Type, from url: String, completion: @escaping(Result <T, NetworkError>) -> Void) {
         DispatchQueue.global().async {
             guard let url = URL(string: url) else {
                 completion(.failure(.invalidURL))
@@ -42,7 +42,7 @@ final class NetworkManager {
                 completion(.failure(.noData))
                 return
             }
-            completion(.success(imageData))
+            completion(.success(imageData as! T))
         }
     }
 }

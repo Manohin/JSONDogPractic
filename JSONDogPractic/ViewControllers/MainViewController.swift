@@ -26,11 +26,11 @@ final class MainViewController: UIViewController {
         fetchDog()
     }
     
-    func fetchDog() {
+    private func fetchDog() {
         activityIndicator.startAnimating()
         dogView.image = nil
         
-        networkManager.fetchData(from: url) { [weak self] result in
+        networkManager.fetch(Data.self, from: url) { [weak self] result in
             switch result {
             case .success(let data):
                 let image = UIImage(data: data)
@@ -44,4 +44,3 @@ final class MainViewController: UIViewController {
         }
     }
 }
-
