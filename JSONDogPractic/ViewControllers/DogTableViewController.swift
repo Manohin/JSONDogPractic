@@ -20,8 +20,6 @@ final class DogTableViewController: UITableViewController {
         setupRefreshControl()
     }
     
-    // MARK: - Table view data source
-    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         dogImages.count
     }
@@ -89,7 +87,6 @@ final class DogTableViewController: UITableViewController {
             if self?.refreshControl != nil {
                 self?.refreshControl?.endRefreshing()
             }
-            
         }
         refreshControl?.addAction(refreshAction, for: .valueChanged)
     }
