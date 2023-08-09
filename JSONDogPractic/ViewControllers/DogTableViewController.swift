@@ -15,9 +15,9 @@ final class DogTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        getDogs()
         tableView.rowHeight = 300
         navigationItem.leftBarButtonItem = editButtonItem
+        setupRefreshControl()
     }
     
     // MARK: - Table view data source
@@ -29,21 +29,20 @@ final class DogTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "dog", for: indexPath)
         var content = cell.defaultContentConfiguration()
-        addSpinner(view: cell)
         content.image = dogImages[indexPath.row]
         cell.contentConfiguration = content
         return cell
     }
     
-    private func getDogs() {
-        for _ in 1...100 {
+    private func getDogs(to quantity: Int) {
+        for _ in 1...quantity {
             networkManager.fetch(Data.self, from: url) { [weak self] result in
                 switch result {
                 case .success(let data):
                     guard let image = UIImage(data: data) else { return }
-                    self?.dogImages.append(image)
                     DispatchQueue.main.async {
                         self?.tableView.reloadData()
+                        self?.dogImages.append(image)
                     }
                     print(self?.dogImages.count ?? 0)
                 case .failure(let error):
@@ -51,10 +50,11 @@ final class DogTableViewController: UITableViewController {
                 }
             }
         }
-        
     }
     
     @IBAction func refreshButtonTapped(_ sender: Any) {
+        dogImages.removeAll()
+        getDogs(to: 10)
         tableView.reloadData()
     }
     
@@ -78,12 +78,19 @@ final class DogTableViewController: UITableViewController {
                                                  dogImages[sourceIndexPath.row])
     }
     
-    private func addSpinner(view: UIView) {
-        let spinner = UIActivityIndicatorView(style: .large)
-        spinner.color = .white
-        spinner.startAnimating()
-        spinner.hidesWhenStopped = true
-        spinner.center = view.center
-        view.addSubview(spinner)
+    private func setupRefreshControl() {
+        refreshControl = UIRefreshControl()
+        refreshControl?.attributedTitle = NSAttributedString(string: "Загружаем собакенов...")
+        
+        let refreshAction = UIAction { [weak self] _ in
+            self?.dogImages.removeAll()
+            self?.getDogs(to: 10)
+            self?.tableView.reloadData()
+            if self?.refreshControl != nil {
+                self?.refreshControl?.endRefreshing()
+            }
+            
+        }
+        refreshControl?.addAction(refreshAction, for: .valueChanged)
     }
 }
